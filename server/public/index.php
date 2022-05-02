@@ -4,6 +4,7 @@ use Phalcon\Loader;
 use Phalcon\Mvc\Micro;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Db\Adapter\Pdo\Mysql as PdoMysql;
+use Phalcon\Http\Request;
 
 $loader = new Loader();
 $loader->registerNamespaces(
@@ -31,6 +32,9 @@ $container->set(
 
 $app = new Micro($container);
 
+$request = new Request();
+$request->getPost('attributes');
+
 $app->get(
     '/',
     function () {
@@ -57,7 +61,7 @@ $app->get(
 
     foreach ($candidates as $cand) {
       $data[] = [
-        'type' => 'applicant',
+        'type' => 'applicants',
         'id'   => $cand->id,
         'attributes' => [
         'name' => $cand->name,
@@ -70,5 +74,31 @@ $app->get(
     echo json_encode(['data' => $data]);
   }
 );
+
+$app->post(
+  '/api/applicants',
+  function () use ($app) {
+    $data = $app->request->getJsonRawBody();
+    $fdata = array_values(get_object_vars($data));
+    $name = ($fdata[0]->attributes->name);
+    $age = ($fdata[0]->attributes->age);
+
+      $phql = "INSERT INTO App\Models\Candidates (name,age) VALUES ('$name', '$age')";
+      $result = $app
+      ->modelsManager
+      ->executeQuery($phql);
+
+      if ($result->success() === false) {
+        foreach ($result->getMessages() as $message) {
+            echo $message->getMessage();
+        }
+      }
+
+      echo json_encode(
+        ['name' => $name,
+        'age' => $age,
+      ]);
+  }
+);  
 
 $app->handle($_SERVER['REQUEST_URI']);

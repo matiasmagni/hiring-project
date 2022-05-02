@@ -24,6 +24,18 @@ class Candidates extends Model
             )
         );
 
+        if (strlen($this->name) < 15) {
+            $this->appendMessage(
+                new Message('The name is too short')
+            );
+        }
+
+        if ($this->age < 0) {
+            $this->appendMessage(
+                new Message("Age can't be negative")
+            );
+        }
+
         if ($this->age < 18) {
             $this->appendMessage(
                 new Message('Candidate must be adult')

@@ -1,15 +1,50 @@
 {{page-title "Candidates"}}
-{{outlet}}
 
-<h1>Listing candidates</h1>
+<h1 class="title">
+  Listing candidates
+</h1>
 
-{{#each model as |applicant|}}
-<div>
-  <h2>{{applicant.name}}</h2>
-  <p>Age: {{applicant.name}}</p>
+<div class="main-container">
+  <div class="sub-container-table">
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <td>Name</td>
+          <td>Age</td>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each @model as |applicant|}}
+        <tr id="tr-body">
+          <td>{{applicant.name}}</td>
+          <td>{{applicant.age}}</td>
+        </tr>
+        {{else}}
+        <div>No records found</div>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub-container">
+    <form {{on "submit" this.addNew}}>
+      <div class="container">
+        <div class="sub-title">
+          <h2>Add new candidate</h2>
+        </div>
+        <div class="form-x">
+          <label for="input-name">Name:</label>
+          <Input class="input" id="input-name" placeholder="Name" aria-label="Name" @type="text"
+            @value={{this.names}} />
+          <label for="input-age">Age:</label>
+          <Input class="input" id="input-age" placeholder="Age" aria-label="Age" @type="text" @value={{this.ages}} />
+        </div>
+        <div class="box-1">
+          <PaperButton @raised={{true}} type="submit" class="button">Add new</PaperButton>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
-{{else}}
-<div>No records found</div>
-{{/each}}
 
-<button {{on 'click' (action 'addNew')}} >Add new</button>
+{{outlet}}

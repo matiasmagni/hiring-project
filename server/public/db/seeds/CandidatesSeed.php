@@ -18,9 +18,6 @@ class CandidatesSeed extends AbstractSeed
         [
           'name'    => 'Frank',
           'age' => 50
-        ],[
-          'name'    => 'Karen',
-          'age' => 20
         ]
       ];
 
